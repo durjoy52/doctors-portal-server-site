@@ -1,14 +1,14 @@
-
-const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const express = require("express");
+const cors = require("cors");
+const  jwt = require('jsonwebtoken');
+const { is } = require("express/lib/request");
+require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 const app = express();
 const port = process.env.PORT || 5000;
-
+// middleware
 app.use(cors());
 app.use(express.json());
 
@@ -52,7 +52,7 @@ async function run() {
         }
       }
 
-      app.post('/create-payment-intent', async(req, res) =>{
+      app.post('/create-payment-intent', verifyJWT, async(req, res) =>{
         const service = req.body;
         const price = service.price;
         const amount = price*100;
