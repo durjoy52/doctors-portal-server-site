@@ -1,13 +1,14 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const  jwt = require('jsonwebtoken');
-const { is } = require("express/lib/request");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+
+const express = require('express');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 const port = process.env.PORT || 5000;
-// middleware
+
 app.use(cors());
 app.use(express.json());
 
