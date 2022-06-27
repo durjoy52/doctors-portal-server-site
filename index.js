@@ -85,7 +85,7 @@ async function run() {
         res.send({ result, token });
       })
   
-      app.get('/user', verifyJWT,verifyAdmin, async (req, res) => {
+      app.get('/user', verifyJWT, async (req, res) => {
         const users = await userCollection.find().toArray();
         res.send(users);
       })
@@ -146,7 +146,7 @@ async function run() {
        return req.status(403).send({message:'forbidden access'})
       }
     })
-    app.post('/doctor',verifyJWT,async(req,res)=>{
+    app.post('/doctor',verifyJWT,verifyAdmin,async(req,res)=>{
       const doctor = req.body;
       const result = await doctorCollection.insertOne(doctor)
       res.send(result)
