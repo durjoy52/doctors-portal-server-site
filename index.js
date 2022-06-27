@@ -89,6 +89,12 @@ async function run() {
         const users = await userCollection.find().toArray();
         res.send(users);
       })
+      app.delete('/users/:email',verifyJWT, async (req, res) => {
+       const email = req.params.email;
+       const filter = {email}
+       const result = userCollection.deleteOne(filter)
+       res.send(result)
+      })
       app.post('/booking', async (req, res) => {
         const booking = req.body;
         const query = { treatment: booking.treatment, date: booking.date, patient: booking.patient }
@@ -140,7 +146,7 @@ async function run() {
        return req.status(403).send({message:'forbidden access'})
       }
     })
-    app.post('/doctor',verifyJWT,verifyAdmin,async(req,res)=>{
+    app.post('/doctor',verifyJWT,async(req,res)=>{
       const doctor = req.body;
       const result = await doctorCollection.insertOne(doctor)
       res.send(result)
