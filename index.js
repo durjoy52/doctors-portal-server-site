@@ -89,7 +89,7 @@ async function run() {
         const users = await userCollection.find().toArray();
         res.send(users);
       })
-      app.delete('/users/:email',verifyJWT, async (req, res) => {
+      app.delete('/user/:email',verifyJWT, async (req, res) => {
        const email = req.params.email;
        const filter = {email}
        const result = userCollection.deleteOne(filter)
