@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId, Transaction } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 const  jwt = require('jsonwebtoken');
@@ -40,6 +40,7 @@ async function run() {
       const bookingCollection = client.db('doctors_portal').collection('bookings');
       const userCollection = client.db('doctors_portal').collection('users');
       const doctorCollection = client.db('doctors_portal').collection('doctors');
+      const paymentCollection = client.db('doctors_portal').collection('payments');
 
       const verifyAdmin = async(req,res,next)=>{
         const requester = req.decoded.email;
@@ -117,6 +118,21 @@ async function run() {
         }
         const result = await bookingCollection.insertOne(booking);
         return res.send({ success: true, result });
+      })
+
+      app.patch('/booking/:id',verifyJWT,async(req,res)=>{
+        const id = req.params.id
+        const payment = req.body
+        const filter = {_id:ObjectId(id)}
+        const updateDoc ={
+          $set: {
+            paid: true,
+            TransactionId: payment.TransactionId
+          }
+        }
+        const updatedBooking = await bookingCollection.updateOne(filter,updateDoc)
+        const result =await paymentCollection.insertOne(payment)
+        res.send(updateDoc)
       })
 
        // Warning: This is not the proper way to query multiple collection. 
