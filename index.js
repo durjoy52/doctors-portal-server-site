@@ -89,6 +89,12 @@ async function run() {
         const users = await userCollection.find().toArray();
         res.send(users);
       })
+      app.delete('/user/:email', verifyJWT, async (req, res) => {
+       const email = req.params.email;
+       const filter = {email}
+       const result = userCollection.deleteOne(filter)
+       res.send(result)
+      })
       app.post('/booking', async (req, res) => {
         const booking = req.body;
         const query = { treatment: booking.treatment, date: booking.date, patient: booking.patient }
